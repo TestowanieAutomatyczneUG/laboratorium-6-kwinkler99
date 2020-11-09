@@ -16,8 +16,10 @@ class Valid:
         False
         >>> c.ValidPassword("")
         False
-        >>> c.ValidPassword("Adas_asd656")
+        >>> c.ValidPassword("Adas_adsdy656")
         True
+        >>> c.ValidPassword("abcd efgh23_=")
+        False
         >>> c.ValidPassword("Ad_"+345)
         Traceback (most recent call last):
           File "/snap/pycharm-professional/218/plugins/python/helpers/pycharm/docrunner.py", line 138, in __run
@@ -40,7 +42,12 @@ class Valid:
         if type(password) == str:
             test = 0
 
-            if len(password) <= 8:
+            length = 0
+            for letter in password:
+                if letter.isalpha():
+                    length += 1
+
+            if length <= 8:
                 return False
 
             for letter in password:
@@ -65,7 +72,49 @@ class Valid:
             raise Exception("Error!")
 
 
+class ValidTest(unittest.TestCase):
+    def setUp(self):
+        self.temp = Valid()
+
+    def test_8(self):
+        self.assertEqual(self.temp.ValidPassword("1Ab_"), False)
+
+    def test_capital_letter_without_num(self):
+        self.assertEqual(self.temp.ValidPassword("asdD_adsad"), False)
+
+    def test_capital_letter_with_num(self):
+        self.assertEqual(self.temp.ValidPassword("asdD_adDs4ad"), True)
+
+    def test_capital_letter(self):
+        self.assertEqual(self.temp.ValidPassword("asdDASASDd"), False)
+
+    def test_number_without_capital_letter(self):
+        self.assertEqual(self.temp.ValidPassword("asd234-+d"), False)
+
+    def test_number_without_special(self):
+        self.assertEqual(self.temp.ValidPassword("as23Dd"), False)
+
+    def test_number(self):
+        self.assertEqual(self.temp.ValidPassword("req123_-plmdDjk"), True)
+
+    def test_special_character(self):
+        self.assertEqual(self.temp.ValidPassword("+-'/."), False)
+
+    def test_special_character_true(self):
+        self.assertEqual(self.temp.ValidPassword("A+-bgopdasd='/.5"), True)
+
+    def test_using_space(self):
+        self.assertEqual(self.temp.ValidPassword("abcd efgh23_="), False)
+
+    def test_exception(self):
+        self.assertRaises(Exception, self.temp.ValidPassword, 745)
+
+    def tearDown(self):
+        self.temp = None
+
+
 if __name__ == "__main__":
     import doctest
-
+    c = Valid()
+    c.ValidPassword("A+-bgopasd='/.5")
     doctest.testmod(extraglobs={'c': Valid()})

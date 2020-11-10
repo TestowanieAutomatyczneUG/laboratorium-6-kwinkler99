@@ -115,6 +115,4 @@ class ValidTest(unittest.TestCase):
 
 if __name__ == "__main__":
     import doctest
-    c = Valid()
-    c.ValidPassword("A+-bgopasd='/.5")
     doctest.testmod(extraglobs={'c': Valid()})
